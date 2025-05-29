@@ -9,7 +9,7 @@ import os
 import tempfile
 import shutil
 from collections import Counter
-
+from gtts import gTTS
 import sys
 import os
 import shutil
@@ -138,35 +138,62 @@ class DeckBuilder:
 
     
     def export_to_anki(self):
-
         my_model = genanki.Model(
             1607392319,
             'Simple Model',
             fields=[
                 {'name': 'Question'},
                 {'name': 'Answer'},
+                {'name': 'Sound'}
             ],
             templates=[
                 {
-                'name': 'Card 1',
-                'qfmt': '{{Question}}',
-                'afmt': '{{FrontSide}}<hr id="answer">{{Answer}}',
+                    'name': 'Card 1',
+                    'qfmt': '{{Question}}<br>{{Sound}}',
+                    'afmt': '{{FrontSide}}<hr id="answer">{{Answer}}',
                 },
-        ])
-        
-        my_deck = genanki.Deck(2059400110,self.filename)
+            ]
+        )
 
+        my_deck = genanki.Deck(2059400110, self.filename)
+        media_files = []
+
+        counter = 0
         for item in self.listOfCards:
+            tts_text = item.reb[0]
+            
             item.gloss = item.formatGloss(item.gloss)
             item.reb = item.formatReb(item.reb)
             print(item.gloss + " - " + item.reb)
 
+            # Generate TTS and save to file
+            tts = gTTS(text=tts_text, lang='ja')
+            media_dir = 'media bulk'
+            os.makedirs(media_dir, exist_ok=True)  # Creates the folder if it doesn't exist
+
+            filename = os.path.join(media_dir, f'{item.kanji}.mp3')
+            ##tts.save(filename)
+            media_files.append(filename)
+
+            # Create note
             note = genanki.Note(
-            model=my_model,
-            fields=[item.kanji, str(item.gloss) + str(item.reb)])
+                model=my_model,
+                fields=[
+                    item.kanji,
+                    str(item.gloss) + str(item.reb),
+                    f"[sound:{filename}]"
+                ]
+            )
+
+            counter += 1
+            print(str(counter) + " / " + str(len(self.listOfCards)))
             my_deck.add_note(note)
 
-        genanki.Package(my_deck).write_to_file('Flashcards ' + str(self.filename) + '.apkg')
+        # Export package with media
+        my_package = genanki.Package(my_deck)
+        my_package.media_files = media_files
+        ##e.write_to_file('output.apkg')
+
   
 
 
@@ -215,7 +242,7 @@ class MyApp(QWidget):
         self.setLayout(self.layout)
 
 
-    from ebook_converter import EbookConverter  # Make sure this class is in your project
+    from ebook_converter import EbookConverter
 
     def update_min_occurance(self, value):
         if self.deck_builder is not None:
@@ -267,7 +294,9 @@ class MyApp(QWidget):
 app = QApplication(sys.argv)
 window = MyApp()
 window.show()
-sys.exit(app.exec())
+sys.exit(app.exec()) 
+
+ 
 
 
 
