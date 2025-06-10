@@ -17,7 +17,6 @@ pip install genanki
 
 \
 [Calibre](https://calibre-ebook.com/download ) will have to be installed for ebook and PDF conversion.
-Specificaly the ebookconvert exe file in the bin folder as EbookToAnki uses this as a subprocess. 
 
 gTTS will have to be installed for sound generation \
 pip install gTTS
