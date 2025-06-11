@@ -3,7 +3,8 @@
 A project that takes japanese Ebooks of all popular formats, or PDFs, and creates flashcards to be used in [Anki](https://apps.ankiweb.net/). The program makes a flashcard of each unique kanji in the book and creates a flashcard complete with hiragana, english translation generated sound. The program tokenizes the book / document using [Mecab](https://en.wikipedia.org/wiki/MeCab) to recognize japanese words since most japanese texts are written without the use of the spacebar. A minimum occurance filter can also be applied to ensure that the kanji / token is mentioned in the book for x amounts of times to become a flashcard. 
 
 \
-The program runs with a simple grafic interface to navigate the program. 
+The program runs with a simple [PySide6](https://pypi.org/project/PySide6/) interface to navigate the program. 
+pip install PySide6
 
 Mecab will have to be installed for segmentation of japanese text. 
 pip install mecab-python3
