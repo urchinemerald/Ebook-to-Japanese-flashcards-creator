@@ -4,15 +4,19 @@ A project that takes japanese Ebooks of all popular formats, or PDFs, and create
 
 \
 The program runs with a simple [PySide6](https://pypi.org/project/PySide6/) interface to navigate the program. 
+\
 pip install PySide6
 
 Mecab will have to be installed for segmentation of japanese text. 
+\
 pip install mecab-python3
+\
 ex:
 wakati = MeCab.Tagger("-Owakati") 
 >>> wakati.parse("pythonが大好きです").split()
 ['python', 'が', '大好き', 'です']
 
+\
 Genanki will have to be installed for creation of the anki flashcards. \
 pip install genanki
 
